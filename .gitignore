@@ -141,3 +141,9 @@ fabric.properties
 *.iml
 out
 target
+<<<<<<< HEAD
+=======
+*/gradle/
+*/gradlew.bat
+*/gradlew
+>>>>>>> Create branch for hw3
