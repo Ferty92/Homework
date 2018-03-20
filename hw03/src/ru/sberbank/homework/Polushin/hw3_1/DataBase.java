@@ -8,15 +8,22 @@ import ru.sberbank.homework.Polushin.hw3_1.Utils.PinCode;
 
 import java.util.Formatter;
 
-
+/*
+Мини база данных , содержащая три счета и информацию о них.
+ */
 public enum DataBase {
     FIRST("1234", new PinCode("1111"), new Money(0.0)),
     SECOND("9876", new PinCode("2222"), new Money(1000.0)),
     THIRD("0001", new PinCode("3333"), new Money(5555.44));
 
+    /*
+    Поля для каждой сущности (счета): максимальное число неверных попыток,
+    время блокировки в милисекундах, время сброса неудачных попыток в милисекундах,
+    номер счета, время начала блокировки, количество попыток ввода пина, пин-код, баланс, статус блокировки.
+     */
     private static final int MAX_COUNTS = 3;
-    //TODO Changed to 5000!!!
-    private static final int LOCK = 10000;
+    private static final int LOCK = 5000;
+    private static final int RESET = 60000;
     public final String account;
     public long lockedTime;
     private int counts = 0;
@@ -39,13 +46,27 @@ public enum DataBase {
         this.balance = balance;
     }
 
+    /*
+    Сброс счетчика неудачных попыток по времени.
+     */
+    private void resetCounts() {
+        if (System.currentTimeMillis() - this.lockedTime > RESET) {
+            this.counts = 0;
+        }
+    }
+
+    /*
+    Счетчик попыток
+     */
     private void setCounts() throws AccountIsLockedException {
+        resetCounts();
+        getAccount();
         this.counts++;
+        this.lockedTime = System.currentTimeMillis();
         if (this.counts >= MAX_COUNTS) {
             this.locked = true;
             this.counts = 0;
-            this.lockedTime = System.currentTimeMillis();
-            throw new AccountIsLockedException("You exceed max counts of attempts. " +
+            throw new AccountIsLockedException("You exceeded max counts of attempts. " +
                     "Accounts is locked now. Try again after: " +
                     new Formatter().format("%tS second(s)", LOCK - (System.currentTimeMillis() - this.lockedTime)));
         }
@@ -55,15 +76,19 @@ public enum DataBase {
         this.pin = pin;
     }
 
+    /*
+    Проверяем доступен ли аккаунт и возвращаем его, если доступен.
+     */
     public String getAccount() throws AccountIsLockedException {
         if (this.locked == true && System.currentTimeMillis() - this.lockedTime < LOCK) {
-            throw new AccountIsLockedException("You exceed max counts of attempts. " +
+            throw new AccountIsLockedException("You exceeded max counts of attempts. " +
                     "Accounts is locked now. Try again after: " +
                     new Formatter().format("%tS second(s)", LOCK - (System.currentTimeMillis() - this.lockedTime)));
         }
         this.locked = false;
         return account;
     }
+
 
     public boolean changePin(PinCode oldPin, PinCode newPin) throws InvalidPinCodeException {
         if (this.pin.equals(oldPin)) {
@@ -74,12 +99,14 @@ public enum DataBase {
         return true;
     }
 
+    /*
+    Проверка валидности пин-кода
+     */
     public boolean isCorrect(PinCode pin) throws InvalidPinCodeException, AccountIsLockedException {
+        setCounts();
         if (this.pin.equals(pin)) {
             return true;
         } else {
-            getAccount();
-            setCounts();
             throw new InvalidPinCodeException("Incorrect current pin. Please try again.");
         }
 
