@@ -1,6 +1,9 @@
 package ru.sberbank.homework.Polushin.hw3_1.Utils;
 
-
+/*
+НЕ ИСПОЛЬЗУЕМЫЙ КЛАСС!!!
+Возможно может пригодиться для улучшения.
+ */
 public enum Operations {
     GET(1) {
         @Override

@@ -76,14 +76,15 @@ public class TerminalImpl implements Terminal, PinInterface, Runnable {
 
     @Override
     public void run() {
-        String line;
         final String selectOperations = "Input quit for exit or select operation: \n" +
                 "1. Put Money;\n" +
                 "2. Get Money;\n" +
                 "3. Check Balance;\n" +
                 "4. Changed Pin Code.\n";
 
-        printStream.print("Hello! This is THE TERMINAL!\n Please Input your account:\n");
+        String line;        //Считыватель команд
+
+        printStream.print("Hello! This is THE TERMINAL!\n Please Input your account or exit for close THE TERMINAL:\n");
         while (scanner.hasNext() && !(line = scanner.nextLine()).equals("exit")) {
             try {
                 /*
@@ -95,7 +96,7 @@ public class TerminalImpl implements Terminal, PinInterface, Runnable {
                 /*
                 Ввод пароля от аккаунта
                  */
-                printStream.print("Input you pin code:\n");
+                printStream.print("Input you pin code or cancel:\n");
                 while (scanner.hasNext() && !(line = scanner.nextLine()).equals("cancel")) {
                     try {
                         inputPin(line);
@@ -113,7 +114,6 @@ public class TerminalImpl implements Terminal, PinInterface, Runnable {
                  */
                 printStream.print(selectOperations);
                 while (!(line = scanner.nextLine()).equals("quit")) {
-                    Money money;
                     try {
                         connect();
                         switch (Integer.parseInt(line)) {
@@ -128,7 +128,7 @@ public class TerminalImpl implements Terminal, PinInterface, Runnable {
                                 printStream.print("Success!\n");
                                 break;
                             case 3:
-                                printStream.print(getStatementOfAccount().toString()+"\n");
+                                printStream.print(getStatementOfAccount().toString() + "\n");
                                 break;
                             case 4:
                                 printStream.print("Input old pin:\n");
@@ -151,6 +151,8 @@ public class TerminalImpl implements Terminal, PinInterface, Runnable {
                         printStream.print(e.getMessage() + "\n");
                     } catch (ServerConnectionException e) {
                         printStream.print(e.getMessage() + "\n");
+                    } catch (NumberFormatException e) {
+                        printStream.print("Not valid command. Try again.\n");
                     } finally {
                         printStream.print(selectOperations);
                     }
@@ -163,7 +165,7 @@ public class TerminalImpl implements Terminal, PinInterface, Runnable {
             } catch (ServerConnectionException e) {
                 printStream.print(e.getMessage() + "\n");
             } finally {
-                printStream.print("Please Input your account:\n");
+                printStream.print("Please Input your account or exit for close THE TERMINAL:\n");
             }
         }
     }
