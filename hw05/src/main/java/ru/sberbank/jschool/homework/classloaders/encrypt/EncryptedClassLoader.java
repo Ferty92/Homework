@@ -20,11 +20,11 @@ public class EncryptedClassLoader extends URLClassLoader {
         byte[] original = null;
         byte[] encrypt;
         try {
-            encrypt = Files.readAllBytes(Paths.get(getURLs()[0].getFile().substring(1) + name + ".class"));
+            encrypt = Files.readAllBytes(Paths.get(getURLs()[0].getFile().substring(1) + name));
             original = cryptoCaesar.decoder(encrypt);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return defineClass(name, original, 0, original.length);
+        return defineClass(name.split(".class")[0], original, 0, original.length);
     }
 }
