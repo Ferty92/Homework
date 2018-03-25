@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.*;
 
 public class LoaderForPlugin extends ClassLoader {
-    private Map<String, Class<?>> classLoaded = new HashMap();
+    private Map<String, Class<?>> classLoaded = new TreeMap<>();
     private ClassLoader parent;
 
     public LoaderForPlugin(ClassLoader parent) {
@@ -27,7 +27,7 @@ public class LoaderForPlugin extends ClassLoader {
 
             /*
             Делегирование родительскому загрузчику. Необходимо, т.к. нужно найти
-            загруженный класс самого интерфейса!
+            и загрузить другие связанные классы, в т.ч. сам интерфейс Plugin .
              */
             if (c == null) {
                 long t0 = System.nanoTime();
@@ -50,6 +50,7 @@ public class LoaderForPlugin extends ClassLoader {
                     sun.misc.PerfCounter.getParentDelegationTime().addTime(t1 - t0);
                     sun.misc.PerfCounter.getFindClassTime().addElapsedTimeFrom(t1);
                     sun.misc.PerfCounter.getFindClasses().increment();
+
                     classLoaded.put(className, c);
                 }
             }
@@ -74,7 +75,7 @@ public class LoaderForPlugin extends ClassLoader {
              */
             File file = new File(className);
             String shortname = file.getName().split(".class$")[0];
-            byte b[] = fetchClassFromFS(file);
+            byte b[] = fetchClassFromFS(className.split(".class")[0]);
 
             /*
             Это КОСТЫЛЬ. Не знаю как обходить ситуацию, когда у плагина пользователя
@@ -108,8 +109,9 @@ public class LoaderForPlugin extends ClassLoader {
      * Взято из www.java-tips.org/java-se-tips/java.io/reading-a-file-into-a-byte-array.html
      * Считывает байт код файла.
      */
-    private byte[] fetchClassFromFS(File file) throws FileNotFoundException, IOException {
+    private byte[] fetchClassFromFS(String name) throws FileNotFoundException, IOException {
 
+        File file = new File(name + ".class");
         FileInputStream is = new FileInputStream(file);
 
         // Get the size of the file
