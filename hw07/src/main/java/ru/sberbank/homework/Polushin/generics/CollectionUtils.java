@@ -12,7 +12,7 @@ public class CollectionUtils {
         destination.addAll(source);
     }
 
-    public static <T> List<? super T> newArrayList() {
+    public static <T> List<T> newArrayList() {
         return new ArrayList<>();
     }
 
@@ -20,7 +20,6 @@ public class CollectionUtils {
         return source.indexOf(o);
     }
 
-    //FIXME
     public static <T> List<? super T> limit(List<? extends T> source, int size) {
         List<? super T> retList = newArrayList();
         for (int i = 0; i < size; i++) {
@@ -37,7 +36,6 @@ public class CollectionUtils {
         removeFrom.removeAll(c2);
     }
 
-    //FIXME
     public static <T> boolean containsAll(List<? extends T> c1, List<? extends T> c2) {
         return c1.containsAll(c2);
     }
@@ -51,8 +49,8 @@ public class CollectionUtils {
     // Возвращает лист, содержащий элементы из входного листа в диапазоне от min до max.
     // Элементы сравнивать через Comparable.
     // Пример range(Arrays.asList(8,1,3,5,6, 4), 3, 6) вернет {3,4,5,6}
-    public static <T> List<? super T> range(List<? extends T> list, Comparable<T> min, Comparable<T> max) {
-        List<? super T> retList = newArrayList();
+    public static <T> List<T> range(List<? extends T> list, Comparable<T> min, Comparable<T> max) {
+        List<T> retList = newArrayList();
         list.forEach(element -> {
             if (min.compareTo(element)<=0 && max.compareTo(element)>=0) {
                 retList.add(element);
@@ -61,8 +59,8 @@ public class CollectionUtils {
         return retList;
     }
 
-    public static <T> List<? super T> range(List<? extends T> list, T min, T max, Comparator<T> comparator) {
-        List<? super T> retList = newArrayList();
+    public static <T> List<T> range(List<? extends T> list, T min, T max, Comparator<T> comparator) {
+        List<T> retList = newArrayList();
         list.forEach(element -> {
             if (comparator.compare(element, min) >= 0 && comparator.compare(element, max) <= 0) {
                 retList.add(element);
