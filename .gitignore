@@ -5,6 +5,9 @@ hw02
 hw03
 hw05
 
+###Folders
+.gradle
+
 ### Java template
 # Compiled class file
 *.class
