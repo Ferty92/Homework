@@ -6,6 +6,12 @@ import java.util.TreeMap;
 public class MyMap<T> implements CountMap<T> {
     private Map<T, Integer> innerMap = new TreeMap<>();
 
+    public MyMap() {
+    }
+
+    public MyMap(Map<T, Integer> innerMap) {
+        this.innerMap = innerMap;
+    }
 
     @Override
     public void add(T element) {
@@ -37,7 +43,7 @@ public class MyMap<T> implements CountMap<T> {
     }
 
     @Override
-    public Map toMap() {
+    public Map<T, Integer> toMap() {
         return new TreeMap<>(innerMap);
 
     }
