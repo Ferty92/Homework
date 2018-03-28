@@ -1,0 +1,15 @@
+InMemoryRouteService
+ time for serialize: 288292624; for deserialize:2932
+
+ Size of file = 0
+
+SerializableRouteService
+ time for serialize: 23606903; for deserialize:7218688
+
+ Size of file = 1404
+
+ExternalizeRouteService
+ time for serialize: 11830760; for deserialize:22246593
+
+ Size of file = 1736
+

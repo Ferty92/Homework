@@ -15,19 +15,21 @@ import java.util.UUID;
  */
 public class InMemoryRouteService extends RouteService<City, Route<City>> {
     private HashMap<String, Route<City>> routeHashMap = new HashMap<>();
+    private String key;
 
-    public InMemoryRouteService(CachePathProvider cachePathProvider) {
-        super(cachePathProvider, false);
+    public InMemoryRouteService(CachePathProvider cachePathProvider, boolean devMode) {
+        super(cachePathProvider, devMode);
     }
 
     @Override
     public Route<City> getRoute(String from, String to) {
-        String key = from + "_" + to;
+        key = from + "_" + to;
         Route<City> route = routeHashMap.get(key);
         if (route == null) {
             route = super.getRoute(from, to);
             routeHashMap.put(key, route);
         }
+
         return route;
     }
 
@@ -38,6 +40,6 @@ public class InMemoryRouteService extends RouteService<City, Route<City>> {
 
     @Override
     protected Route<City> createRoute(List<City> cities) {
-        return new Route<>(UUID.randomUUID().toString(), cities);
+        return new Route<>(key, cities);
     }
 }
