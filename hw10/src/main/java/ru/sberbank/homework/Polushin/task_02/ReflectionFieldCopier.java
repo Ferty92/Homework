@@ -1,4 +1,4 @@
-package ru.sberbank.homework.your_lastname.task_02;
+package ru.sberbank.homework.Polushin.task_02;
 
 import ru.sberbank.homework.common.BeanFieldCopier;
 
