@@ -1,4 +1,4 @@
-package ru.sberbank.homework.your_lastname.task_01;
+package ru.sberbank.homework.Polushin.task_01;
 
 public class AnnotationFinderApp {
     public static void main(String[] args) {
