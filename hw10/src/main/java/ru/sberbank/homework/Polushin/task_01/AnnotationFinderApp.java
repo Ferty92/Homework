@@ -12,18 +12,13 @@ import java.lang.reflect.Method;
 import java.util.*;
 
 public class AnnotationFinderApp {
-    private static String PACKAGE_NAME;
-
-    public AnnotationFinderApp() {
-
-    }
+    final static String PACKAGE_NAME = "ru.sberbank.homework.common.entity";
 
     public static void main(String[] args)
             throws NoSuchFieldException, IllegalAccessException, ClassNotFoundException,
             NoSuchMethodException, InvocationTargetException {
-        PACKAGE_NAME = "ru.sberbank.homework.common.entity";
         Class<Prototype> annotationForClass = Prototype.class;
-        String methodOfAnnotation = "version";
+        String methodOfAnnotation = annotationForClass.getMethods()[0].getName();
         Class<ExperimentalFeature> annotationForField = ExperimentalFeature.class;
         Class<ExperimentalFeature> annotationForMethod = ExperimentalFeature.class;
 
@@ -119,7 +114,7 @@ public class AnnotationFinderApp {
                 + packageName.replaceAll("[.]", "/");
         File directory = new File(path);
 
-        for (File file : directory.listFiles()) {
+        for (File file : Objects.requireNonNull(directory.listFiles())) {
             classLoader.loadClass(packageName + "." + file.getName().replace(".class", ""));
         }
     }
