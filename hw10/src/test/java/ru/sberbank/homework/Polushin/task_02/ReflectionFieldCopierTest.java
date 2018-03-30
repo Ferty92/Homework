@@ -31,9 +31,10 @@ public class ReflectionFieldCopierTest {
         System.out.println(first);
         System.out.println(second);
         assertEquals(first.getI(), second.getI());
-        assertEquals(first.getL(), second.getL());
         assertEquals(first.getString(), second.getString());
         assertEquals(first.getD(), second.getD(), 1E-10);
+        //Можем передать инт в лонг
+        assertEquals(first.getL(), second.getL());
     }
     
     @Test
@@ -42,8 +43,9 @@ public class ReflectionFieldCopierTest {
         System.out.println(first);
         System.out.println(second);
         assertEquals(first.getI(), second.getI());
-        assertNotEquals(first.getL(), second.getL());
         assertEquals(first.getString(), second.getString());
         assertEquals(first.getD(), second.getD(), 1E-12);
+        //не можем лонг передать в инт
+        assertNotEquals(first.getL(), second.getL());
     }
 }

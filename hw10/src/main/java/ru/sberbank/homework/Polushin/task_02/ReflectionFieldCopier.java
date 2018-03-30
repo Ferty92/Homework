@@ -17,20 +17,16 @@ public class ReflectionFieldCopier implements BeanFieldCopier {
                 .filter(element -> element.getName().contains("get"))
                 .map(Method::getName)
                 .collect(Collectors.toList());
-//        List<String> methodsTo = Arrays.stream(to.getClass().getMethods())
-//                .filter(element -> element.getName().contains("set"))
-//                .map(Method::getName)
-//                .collect(Collectors.toList());
         
         for (String get : methodsFrom) {
             
             try {
                 Method fromMethod = from.getClass().getMethod(get);
                 
-                String toSetMethod = get.replace("get", "set");
+                String set = get.replace("get", "set");
                 
                 for (Method toMethod : to.getClass().getMethods()) {
-                    if (toMethod.getName().contains(toSetMethod)) {
+                    if (toMethod.getName().contains(set)) {
                         Type typeRetFrom = from.getClass().getMethod(get).getGenericReturnType();
                         Type typeGetTo = toMethod.getGenericParameterTypes()[0];
                         
