@@ -10,9 +10,9 @@
     <packaging>jar</packaging>
 
     <properties>
-        <jacoco.version>0.7.5.201505241946</jacoco.version>
+        <jacoco.version>0.7.9</jacoco.version>
         <junit.version>4.12</junit.version>
-        <mockito-core.version>1.10.19</mockito-core.version>
+        <mockito-core.version>2.15.0</mockito-core.version>
         <maven-compiler-plugin.version>3.6.1</maven-compiler-plugin.version>
         <surefire.version>2.19.1</surefire.version>
     </properties>
@@ -40,8 +40,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>${maven-compiler-plugin.version}</version>
                 <configuration>
-                    <skipMain>true</skipMain>
-                    <skip>true</skip>
+                    <skipMain>false</skipMain>
+                    <skip>false</skip>
                     <source>1.8</source>
                     <target>1.8</target>
                 </configuration>
@@ -79,8 +79,6 @@
                         </configuration>
                     </execution>
                 </executions>
-                <configuration>
-                </configuration>
 
             </plugin>
             <plugin>
@@ -95,6 +93,8 @@
                     </dependency>
                 </dependencies>
                 <configuration>
+                    <testSourceDirectory>src/test/java</testSourceDirectory>
+                    <!--<includes><include>**/*Test.java</include></includes>-->
                     <systemPropertyVariables>
                         <jacoco-agent.destfile>target/jacoco.exec</jacoco-agent.destfile>
                     </systemPropertyVariables>
