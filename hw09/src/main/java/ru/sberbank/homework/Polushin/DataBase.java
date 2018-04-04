@@ -11,11 +11,11 @@ import java.util.Formatter;
 /*
 Мини база данных , содержащая три счета и информацию о них.
  */
-public enum DataBase {
+enum DataBase {
     FIRST("1234", new PinCode("1111"), new Money(0.0)),
     SECOND("9876", new PinCode("2222"), new Money(1000.0)),
     THIRD("0001", new PinCode("3333"), new Money(5555.44));
-
+    
     /*
     Поля для каждой сущности (счета): максимальное число неверных попыток,
     время блокировки в милисекундах, время сброса неудачных попыток в милисекундах,
@@ -29,68 +29,68 @@ public enum DataBase {
     private int counts = 0;
     private PinCode pin;
     private Money balance;
-    private boolean locked = false;
-
+    private boolean locked;
+    
     DataBase(String account, PinCode pinCode, Money balance) {
         this.balance = balance;
         this.account = account;
         this.pin = pinCode;
         this.locked = false;
     }
-
-    public Money getBalance() {
-        return balance;
+    
+    Money getBalance() {
+        return new Money(balance.getValue());
     }
-
-    public void setBalance(Money balance) {
+    
+    protected void setBalance(Money balance) {
         this.balance = balance;
     }
-
+    
     /*
     Сброс счетчика неудачных попыток по времени.
      */
     private void resetCounts() {
-        if (System.currentTimeMillis() - this.lockedTime > RESET) {
+        if (System.currentTimeMillis() - this.lockedTime > RESET
+                || (this.locked && System.currentTimeMillis() - this.lockedTime > LOCK)) {
             this.counts = 0;
+            this.locked = false;
         }
     }
-
+    
     /*
     Счетчик попыток
      */
     private void setCounts() throws AccountIsLockedException {
         resetCounts();
-        getAccount();
-        this.counts++;
+//        this.getAccount();
         this.lockedTime = System.currentTimeMillis();
+        this.counts++;
         if (this.counts >= MAX_COUNTS) {
             this.locked = true;
-            this.counts = 0;
-            throw new AccountIsLockedException("You exceeded max counts of attempts. " +
+            throw new AccountIsLockedException("Incorrect current pin. You exceeded max counts of attempts. " +
                     "Accounts is locked now. Try again after: " +
                     new Formatter().format("%tS second(s)", LOCK - (System.currentTimeMillis() - this.lockedTime)));
         }
     }
-
+    
     private void setPin(PinCode pin) {
         this.pin = pin;
     }
-
+    
     /*
     Проверяем доступен ли аккаунт и возвращаем его, если доступен.
      */
-    public String getAccount() throws AccountIsLockedException {
-        if (this.locked == true && System.currentTimeMillis() - this.lockedTime < LOCK) {
+    protected String getAccount() throws AccountIsLockedException {
+        if (this.locked && System.currentTimeMillis() - this.lockedTime < LOCK) {
             throw new AccountIsLockedException("You exceeded max counts of attempts. " +
                     "Accounts is locked now. Try again after: " +
                     new Formatter().format("%tS second(s)", LOCK - (System.currentTimeMillis() - this.lockedTime)));
         }
-        this.locked = false;
         return account;
     }
-
-
-    public boolean changePin(PinCode oldPin, PinCode newPin) throws InvalidPinCodeException {
+    
+    
+    protected boolean changePin(PinCode oldPin, PinCode newPin) throws InvalidPinCodeException {
         if (this.pin.equals(oldPin)) {
             this.setPin(newPin);
         } else {
@@ -98,17 +98,15 @@ public enum DataBase {
         }
         return true;
     }
-
+    
     /*
     Проверка валидности пин-кода
      */
-    public boolean isCorrect(PinCode pin) throws InvalidPinCodeException, AccountIsLockedException {
-        setCounts();
-        if (this.pin.equals(pin)) {
-            return true;
-        } else {
+    protected boolean isCorrect(PinCode pin) throws InvalidPinCodeException, AccountIsLockedException {
+        if (!this.pin.equals(pin)) {
+            this.setCounts();
             throw new InvalidPinCodeException("Incorrect current pin. Please try again.");
         }
-
+        return true;
     }
 }
