@@ -1,6 +1,6 @@
 package ru.sberbank.homework.Polushin.hw3_1.Exception;
 
-public class AccountsException extends Exception {
+public class AccountsException extends RuntimeException {
     public AccountsException(String message) {
         super(message);
     }
