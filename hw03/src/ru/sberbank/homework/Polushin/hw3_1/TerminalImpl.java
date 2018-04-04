@@ -8,20 +8,20 @@ import ru.sberbank.homework.Polushin.hw3_1.Utils.*;
 import java.io.*;
 import java.util.Scanner;
 
-public class TerminalImpl implements Terminal, PinInterface, Runnable {
-
+class TerminalImpl implements Terminal, PinInterface, Runnable {
+    
     private final TerminalServer server = new TerminalServer();
     private final PinValidator pinValidator = new PinValidator();
     private final MoneyValidator moneyValidator = new MoneyValidator();
     private DataBase user;
     private PrintStream printStream;
     private Scanner scanner;
-
-    public TerminalImpl(OutputStream outputStream, InputStream inputStream) {
+    
+    TerminalImpl(OutputStream outputStream, InputStream inputStream) {
         this.printStream = new PrintStream(outputStream);
         this.scanner = new Scanner(inputStream);
     }
-
+    
     /*
     Метод проверяющий состояния подключения к серверу.
      */
@@ -30,33 +30,33 @@ public class TerminalImpl implements Terminal, PinInterface, Runnable {
             throw new ServerConnectionException("Server connection failed. Try again.");
         }
     }
-
+    
     /*
     Вводим индификатор аккаунта пользователя
      */
     public void setAccount(String account) throws AccountsException, AccountIsLockedException {
         this.user = server.getAccount(account);
     }
-
+    
     @Override
     public Money getStatementOfAccount() {
         return server.check(this.user);
     }
-
+    
     @Override
     public Money deposit(String amount) throws IllegalValueOfMoneyException {
         Money money = new Money(moneyValidator.validate(amount));
         server.put(this.user, money);
         return getStatementOfAccount();
     }
-
+    
     @Override
     public Money withdraw(String amount) throws IllegalValueOfMoneyException {
         Money money = new Money(moneyValidator.validate(amount));
         server.get(this.user, money);
         return getStatementOfAccount();
     }
-
+    
     @Override
     public boolean changedPin(String oldPin, String newPin) throws PinValidatorException {
         pinValidator.validate(oldPin);
@@ -66,14 +66,14 @@ public class TerminalImpl implements Terminal, PinInterface, Runnable {
         server.change(this.user, oldPinCode, newPinCode);
         return true;
     }
-
+    
     @Override
     public boolean inputPin(String pin) throws PinValidatorException {
         PinCode pinCode = pinValidator.validate(pin);
         user.isCorrect(pinCode);
         return true;
     }
-
+    
     @Override
     public void run() {
         final String selectOperations = "Input quit for exit or select operation: \n" +
@@ -81,9 +81,9 @@ public class TerminalImpl implements Terminal, PinInterface, Runnable {
                 "2. Get Money;\n" +
                 "3. Check Balance;\n" +
                 "4. Changed Pin Code.\n";
-
+        
         String line;        //Считыватель команд
-
+        
         printStream.print("Hello! This is THE TERMINAL!\n Please Input your account or exit for close THE TERMINAL:\n");
         while (scanner.hasNext() && !(line = scanner.nextLine()).equals("exit")) {
             try {
@@ -142,14 +142,9 @@ public class TerminalImpl implements Terminal, PinInterface, Runnable {
                                 throw new IllegalOperationException("Incorrect number of operation. " +
                                         "Please input number 1-4.");
                         }
-
-                    } catch (IllegalOperationException e) {
-                        printStream.print(e.getMessage() + "\n");
-                    } catch (PinValidatorException e) {
-                        printStream.print(e.getMessage() + "\n");
-                    } catch (IllegalValueOfMoneyException e) {
-                        printStream.print(e.getMessage() + "\n");
-                    } catch (ServerConnectionException e) {
+                        
+                    } catch (IllegalOperationException | PinValidatorException
+                            | IllegalValueOfMoneyException | ServerConnectionException e) {
                         printStream.print(e.getMessage() + "\n");
                     } catch (NumberFormatException e) {
                         printStream.print("Not valid command. Try again.\n");
@@ -157,12 +152,8 @@ public class TerminalImpl implements Terminal, PinInterface, Runnable {
                         printStream.print(selectOperations);
                     }
                 }
-
-            } catch (AccountsException e) {
-                printStream.print(e.getMessage() + "\n");
-            } catch (AccountIsLockedException e) {
-                printStream.print(e.getMessage() + "\n");
-            } catch (ServerConnectionException e) {
+                
+            } catch (AccountsException | AccountIsLockedException | ServerConnectionException e) {
                 printStream.print(e.getMessage() + "\n");
             } finally {
                 printStream.print("Please Input your account or exit for close THE TERMINAL:\n");

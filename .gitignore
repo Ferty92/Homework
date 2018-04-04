@@ -1,4 +1,17 @@
 # Created by .ignore support plugin (hsz.mobi)
+###Previous hw
+hw01
+hw02
+hw05
+hw07
+hw09
+hw10
+hw13.1
+hw13.2
+
+###Folders
+.gradle
+
 ### Java template
 # Compiled class file
 *.class
