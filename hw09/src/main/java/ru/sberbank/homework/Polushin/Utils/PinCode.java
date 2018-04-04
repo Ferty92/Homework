@@ -2,7 +2,10 @@ package ru.sberbank.homework.Polushin.Utils;
 
 public class PinCode {
     private String pin = "0000";
-
+    
+    public PinCode() {
+    }
+    
     public PinCode(String pin) {
         this.pin = pin;
     }
@@ -23,6 +26,6 @@ public class PinCode {
 
     @Override
     public String toString() {
-        return new String("****");
+        return "****";
     }
 }
