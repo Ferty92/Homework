@@ -1,19 +1,4 @@
 # Created by .ignore support plugin (hsz.mobi)
-<<<<<<< HEAD
-=======
-###Previous hw
-hw01
-hw02
-hw03
-hw05
-
-<<<<<<< HEAD
->>>>>>> Create folde hw7
-=======
-###Folders
-.gradle
-
->>>>>>> Done generics.
 ### Java template
 # Compiled class file
 *.class
@@ -156,9 +141,3 @@ fabric.properties
 *.iml
 out
 target
-<<<<<<< HEAD
-=======
-*/gradle/
-*/gradlew.bat
-*/gradlew
->>>>>>> Create folde hw7
