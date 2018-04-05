@@ -1,17 +1,4 @@
 # Created by .ignore support plugin (hsz.mobi)
-<<<<<<< HEAD
-=======
-###Previous hw
-hw01
-hw02
-hw03
-hw05
-hw07
-
-###Folders
-.gradle
-
->>>>>>> Create folder for hw10
 ### Java template
 # Compiled class file
 *.class
@@ -154,9 +141,3 @@ fabric.properties
 *.iml
 out
 target
-<<<<<<< HEAD
-=======
-*/gradle/
-*/gradlew.bat
-*/gradlew
->>>>>>> Create folder for hw10
